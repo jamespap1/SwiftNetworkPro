@@ -12,7 +12,7 @@
 [![CocoaPods](https://img.shields.io/badge/CocoaPods-Compatible-red.svg)](https://cocoapods.org)
 [![Carthage](https://img.shields.io/badge/Carthage-Compatible-orange.svg)](https://github.com/Carthage/Carthage)
 
-**[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Performance](#performance) • [Installation](#installation)**
+**[Features](#features) • [Quick Start](#quick-start) • [Documentation](#advanced-usage) • [Performance](#performance) • [Installation](#installation)**
 
 </div>
 
