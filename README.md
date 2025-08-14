@@ -487,47 +487,13 @@ Found a security vulnerability? Please report it responsibly:
 
 </div>
 
-### Development Timeline
-
-```mermaid
-timeline
-    title SwiftNetworkPro Development Journey
-    
-    2022-03 : Initial Setup
-            : Core Architecture
-            : Basic HTTP Client
-            
-    2022-06 : WebSocket Support
-            : Real-time Communication
-            : Auto-reconnection
-            
-    2022-09 : GraphQL Integration
-            : Type-safe Queries
-            : Subscription Support
-            
-    2023-01 : HTTP/2 Protocol
-            : Performance Optimization
-            : Connection Multiplexing
-            
-    2023-06 : Security Features
-            : Certificate Pinning
-            : OAuth2 & JWT
-            
-    2023-12 : v2.0.0 Release
-            : Production Ready
-            : Enterprise Features
-            
-    2024-08 : v3.0.0 Current
-            : Swift Concurrency
-            : Advanced Examples
-```
-
 ### Language Distribution
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor': '#FF6B35', 'primaryTextColor': '#fff', 'primaryBorderColor': '#FF6B35', 'lineColor': '#FF6B35', 'secondaryColor': '#4ECDC4', 'tertiaryColor': '#45B7D1'}}}%%
 pie title Code Distribution
     "Swift" : 92
-    "Documentation" : 5
+    "Documentation" : 5  
     "Configuration" : 2
     "CI/CD" : 1
 ```
