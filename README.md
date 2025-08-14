@@ -12,7 +12,11 @@
 [![CocoaPods](https://img.shields.io/badge/CocoaPods-Compatible-red.svg)](https://cocoapods.org)
 [![Carthage](https://img.shields.io/badge/Carthage-Compatible-orange.svg)](https://github.com/Carthage/Carthage)
 
-**[Features](#features) • [Quick Start](#quick-start) • [Documentation](#advanced-usage) • [Performance](#performance) • [Installation](#installation)**
+[![Features](https://img.shields.io/badge/📚-Features-blue?style=for-the-badge)](#features)
+[![Quick Start](https://img.shields.io/badge/🚀-Quick%20Start-green?style=for-the-badge)](#quick-start)
+[![Documentation](https://img.shields.io/badge/📖-Documentation-orange?style=for-the-badge)](#advanced-usage)
+[![Performance](https://img.shields.io/badge/⚡-Performance-red?style=for-the-badge)](#performance)
+[![Installation](https://img.shields.io/badge/📦-Installation-purple?style=for-the-badge)](#installation)
 
 </div>
 
@@ -482,25 +486,36 @@ Found a security vulnerability? Please report it responsibly:
 ### Development Timeline
 
 ```mermaid
-gitgraph
-    commit id: "Initial Setup"
-    branch feature/websocket
-    commit id: "WebSocket Client"
-    checkout main
-    merge feature/websocket
-    branch feature/graphql
-    commit id: "GraphQL Support"
-    checkout main
-    merge feature/graphql
-    branch feature/http2
-    commit id: "HTTP/2 Protocol"
-    checkout main
-    merge feature/http2
-    branch feature/security
-    commit id: "Security Features"
-    checkout main
-    merge feature/security
-    commit id: "v2.0.0 Release"
+timeline
+    title SwiftNetworkPro Development Journey
+    
+    2022-03 : Initial Setup
+            : Core Architecture
+            : Basic HTTP Client
+            
+    2022-06 : WebSocket Support
+            : Real-time Communication
+            : Auto-reconnection
+            
+    2022-09 : GraphQL Integration
+            : Type-safe Queries
+            : Subscription Support
+            
+    2023-01 : HTTP/2 Protocol
+            : Performance Optimization
+            : Connection Multiplexing
+            
+    2023-06 : Security Features
+            : Certificate Pinning
+            : OAuth2 & JWT
+            
+    2023-12 : v2.0.0 Release
+            : Production Ready
+            : Enterprise Features
+            
+    2024-08 : v3.0.0 Current
+            : Swift Concurrency
+            : Advanced Examples
 ```
 
 ### Language Distribution
