@@ -14,13 +14,13 @@
 
 ## 📋 Table of Contents
 
-- [✨ Features](#user-content--features) - Core capabilities and feature comparison
-- [🚀 Quick Start](#user-content--quick-start) - Installation and basic usage
-- [📖 Advanced Usage](#user-content--advanced-usage) - Configuration and advanced patterns  
-- [⚡ Performance](#user-content--performance) - Benchmarks and optimization
-- [🏢 Enterprise Ready](#user-content--enterprise-ready) - Security and compliance
-- [🤝 Contributing](#user-content--contributing) - How to contribute
-- [📊 Project Statistics](#user-content--project-statistics) - Metrics and analytics
+- [✨ Features](#-features) - Core capabilities and feature comparison
+- [🚀 Quick Start](#-quick-start) - Installation and basic usage
+- [📖 Advanced Usage](#-advanced-usage) - Configuration and advanced patterns  
+- [⚡ Performance](#-performance) - Benchmarks and optimization
+- [🏢 Enterprise Ready](#-enterprise-ready) - Security and compliance
+- [🤝 Contributing](#-contributing) - How to contribute
+- [📊 Project Statistics](#-project-statistics) - Metrics and analytics
 
 </div>
 
