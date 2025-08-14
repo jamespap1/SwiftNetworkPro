@@ -12,11 +12,15 @@
 [![CocoaPods](https://img.shields.io/badge/CocoaPods-Compatible-red.svg)](https://cocoapods.org)
 [![Carthage](https://img.shields.io/badge/Carthage-Compatible-orange.svg)](https://github.com/Carthage/Carthage)
 
-[![Features](https://img.shields.io/badge/📚-Features-blue?style=for-the-badge)](#features)
-[![Quick Start](https://img.shields.io/badge/🚀-Quick%20Start-green?style=for-the-badge)](#quick-start)
-[![Documentation](https://img.shields.io/badge/📖-Documentation-orange?style=for-the-badge)](#advanced-usage)
-[![Performance](https://img.shields.io/badge/⚡-Performance-red?style=for-the-badge)](#performance)
-[![Installation](https://img.shields.io/badge/📦-Installation-purple?style=for-the-badge)](#installation)
+## 📋 Table of Contents
+
+- [✨ Features](#-features) - Core capabilities and feature comparison
+- [🚀 Quick Start](#-quick-start) - Installation and basic usage
+- [📖 Advanced Usage](#-advanced-usage) - Configuration and advanced patterns  
+- [⚡ Performance](#-performance) - Benchmarks and optimization
+- [🏢 Enterprise Ready](#-enterprise-ready) - Security and compliance
+- [🤝 Contributing](#-contributing) - How to contribute
+- [📊 Project Statistics](#-project-statistics) - Metrics and analytics
 
 </div>
 
