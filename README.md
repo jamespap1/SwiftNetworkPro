@@ -487,17 +487,6 @@ Found a security vulnerability? Please report it responsibly:
 
 </div>
 
-### Language Distribution
-
-```mermaid
-%%{init: {'theme':'base', 'themeVariables': {'primaryColor': '#FF6B35', 'primaryTextColor': '#fff', 'primaryBorderColor': '#FF6B35', 'lineColor': '#FF6B35', 'secondaryColor': '#4ECDC4', 'tertiaryColor': '#45B7D1'}}}%%
-pie title Code Distribution
-    "Swift" : 92
-    "Documentation" : 5  
-    "Configuration" : 2
-    "CI/CD" : 1
-```
-
 ### Performance Benchmarks
 
 | Metric | SwiftNetworkPro | Alamofire | URLSession | Improvement |
