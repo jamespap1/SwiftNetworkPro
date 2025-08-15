@@ -1,203 +1,119 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * 1'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_15.4.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
+  XCODE_VERSION: "15.0"
+  SWIFT_VERSION: "5.9"
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: macos-latest
+  lint:
+    name: 🧹 Code Quality & Linting
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode version
+        run: sudo xcode-select -s $DEVELOPER_DIR
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: SwiftLint
+        run: swiftlint lint --reporter github-actions-logging
+      - name: SwiftFormat Check
+        run: |
+          brew install swiftformat
+          swiftformat --lint .
+
+  test-macos:
+    name: 🧪 macOS Tests
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode version
+        run: sudo xcode-select -s $DEVELOPER_DIR
+      - name: Cache Swift Package Manager
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.swift') }}
+      - name: Build
+        run: swift build -v
+      - name: Run Unit Tests
+        run: swift test --enable-code-coverage --parallel
+      - name: Generate Coverage Report
+        run: |
+          xcrun llvm-cov export -format="lcov" \
+            .build/debug/SwiftNetworkProPackageTests.xctest/Contents/MacOS/SwiftNetworkProPackageTests \
+            -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage.lcov
+          flags: macos
+
+  test-ios:
+    name: 📱 iOS Tests
+    runs-on: macos-14
+    timeout-minutes: 45
     strategy:
       matrix:
-        platform: [iOS, macOS]
-        include:
-          - platform: iOS
-            destination: 'platform=iOS Simulator,name=iPhone 15,OS=17.0'
-          - platform: macOS
-            destination: 'platform=macOS'
-
+        destination:
+          - "platform=iOS Simulator,name=iPhone 15 Pro,OS=17.0"
+          - "platform=iOS Simulator,name=iPhone 15,OS=17.0"
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Select Xcode version
+        run: sudo xcode-select -s $DEVELOPER_DIR
+      - name: Build and Test
+        run: |
+          xcodebuild test \
+            -scheme SwiftNetworkPro \
+            -destination "${{ matrix.destination }}" \
+            -enableCodeCoverage YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
 
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '15.4'
-
-    - name: Cache Swift Package Manager
-      uses: actions/cache@v4
-      with:
-        path: .build
-        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-spm-
-
-    - name: Swift Package Manager - Resolve Dependencies
-      run: swift package resolve
-
-    - name: Swift Package Manager - Build
-      run: swift build --configuration release
-
-    - name: Swift Package Manager - Test
-      run: swift test --configuration release --enable-code-coverage
-      continue-on-error: false
-
-  lint:
-    name: Swift Lint
-    runs-on: macos-latest
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: macos-14
+    timeout-minutes: 20
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: SwiftLint
-      uses: norio-nomura/action-swiftlint@3.2.1
-      with:
-        args: --reporter github-actions-logging
-      continue-on-error: false
-
-  security:
-    name: Security Analysis
-    runs-on: macos-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Security Audit - Secrets Check
-      run: |
-        echo "🔍 Scanning for hardcoded secrets..."
-        SECRET_COUNT=$(grep -r -i "password\|secret\|key\|token" --include="*.swift" Sources/ Tests/ Examples/ | wc -l || echo "0")
-        if [ "$SECRET_COUNT" -gt 0 ]; then
-          echo "⚠️  Found $SECRET_COUNT potential secrets - review needed"
-        else
-          echo "✅ No hardcoded secrets detected"
-        fi
-
-    - name: Security Audit - Network Security
-      run: |
-        echo "🔍 Scanning for insecure network calls..."
-        HTTP_COUNT=$(grep -r "http://" --include="*.swift" Sources/ Tests/ Examples/ | wc -l || echo "0")
-        if [ "$HTTP_COUNT" -gt 0 ]; then
-          echo "⚠️  Found $HTTP_COUNT HTTP calls - consider HTTPS"
-        else
-          echo "✅ All network calls use secure protocols"
-        fi
-        echo "🔒 Security scan completed successfully"
+      - uses: actions/checkout@v4
+      - name: Run Security Scan
+        run: swift package diagnose
+      - name: Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
 
   documentation:
-    name: Documentation Build
-    runs-on: macos-latest
+    name: 📚 Documentation
+    runs-on: macos-14
+    timeout-minutes: 20
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Validate Documentation
-      run: |
-        echo "📚 Validating documentation structure..."
-        
-        # Check required documentation files exist
-        REQUIRED_DOCS=("README.md" "CHANGELOG.md" "CONTRIBUTING.md" "LICENSE" "CODE_OF_CONDUCT.md" "SECURITY.md")
-        
-        for doc in "${REQUIRED_DOCS[@]}"; do
-          if [ -f "$doc" ]; then
-            echo "✅ $doc found"
-          else
-            echo "❌ $doc missing"
-            exit 1
-          fi
-        done
-        
-        echo "✅ All documentation files present"
-        echo "📖 Documentation validation completed"
-
-  validation:
-    name: Package Validation  
-    runs-on: macos-latest
-    needs: [build, lint, security, documentation]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '15.4'
-
-    - name: Swift Package Validation
-      run: |
-        echo "📦 Validating Swift Package..."
-        
-        # Validate package structure
-        swift package describe --type json > /dev/null
-        echo "✅ Package.swift is valid"
-        
-        # Build for release configuration  
-        swift build --configuration release
-        echo "✅ Release build successful"
-        
-        # Test installation simulation
-        echo "🧪 Testing package integration..."
-        
-        TEMP_DIR=$(mktemp -d)
-        cd "$TEMP_DIR"
-        
-        cat > Package.swift << 'EOF'
-// swift-tools-version: 5.9
-import PackageDescription
-
-let package = Package(
-    name: "TestIntegration",
-    platforms: [.iOS(.v15), .macOS(.v13)],
-    dependencies: [
-        .package(path: "${{ github.workspace }}")
-    ],
-    targets: [
-        .target(name: "TestIntegration", dependencies: ["SwiftNetworkPro"])
-    ]
-)
-EOF
-
-        mkdir -p Sources/TestIntegration
-        cat > Sources/TestIntegration/TestIntegration.swift << 'EOF'
-import SwiftNetworkPro
-
-public struct TestIntegration {
-    public static func test() {
-        print("SwiftNetworkPro integration successful")
-    }
-}
-EOF
-        
-        swift build
-        echo "✅ Package integration test passed"
-        
-        cd "${{ github.workspace }}"
-        rm -rf "$TEMP_DIR"
-
-  release:
-    name: Release Preparation
-    runs-on: macos-latest  
-    needs: [build, lint, security, documentation, validation]
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Validate Release
-      run: |
-        echo "🚀 Preparing release validation..."
-        
-        # Validate all components
-        echo "✅ Build: Passed"
-        echo "✅ Lint: Passed" 
-        echo "✅ Security: Passed"
-        echo "✅ Documentation: Passed"
-        echo "✅ Validation: Passed"
-        
-        echo "🎉 All checks passed - ready for release!"
+      - uses: actions/checkout@v4
+      - name: Select Xcode version
+        run: sudo xcode-select -s $DEVELOPER_DIR
+      - name: Generate Documentation
+        run: |
+          swift package generate-documentation \
+            --target SwiftNetworkPro \
+            --output-path ./docs
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

@@ -1,0 +1,272 @@
+name: Community Management
+
+on:
+  issues:
+    types: [opened, labeled, assigned]
+  pull_request:
+    types: [opened, review_requested, ready_for_review]
+  schedule:
+    - cron: '0 9 * * MON'  # Every Monday at 9 AM UTC
+
+jobs:
+  welcome-new-contributors:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened'
+    steps:
+      - name: Welcome new issues
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const isFirstTimeContributor = issue.author_association === 'FIRST_TIME_CONTRIBUTOR';
+            
+            if (isFirstTimeContributor) {
+              github.rest.issues.createComment({
+                issue_number: issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `=K Welcome to SwiftNetworkPro! Thank you for opening your first issue.
+                
+                =Ë **What happens next?**
+                - Our team will review your issue within 24-48 hours
+                - We'll add appropriate labels and assign it to the right team member
+                - You'll receive updates as we investigate and work on a solution
+                
+                =à **Want to contribute?**
+                - Check out our [Contributing Guide](../CONTRIBUTING.md)
+                - Browse [good first issues](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+                - Join our [Discussions](../../discussions) for questions
+                
+                Thank you for helping make SwiftNetworkPro better! =€`
+              });
+            }
+
+      - name: Welcome new pull requests
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const isFirstTimeContributor = pr.author_association === 'FIRST_TIME_CONTRIBUTOR';
+            
+            if (isFirstTimeContributor) {
+              github.rest.issues.createComment({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `<‰ Welcome to SwiftNetworkPro! Thank you for your first contribution.
+                
+                =Ë **PR Review Process:**
+                -  CI/CD checks will run automatically
+                - =@ Our team will review your changes within 24-48 hours
+                - = We may request changes or provide feedback
+                - ( Once approved, we'll merge your contribution!
+                
+                =¡ **Tips for a smooth review:**
+                - Ensure all tests pass
+                - Follow our coding guidelines
+                - Update documentation if needed
+                - Be responsive to feedback
+                
+                Thank you for contributing to SwiftNetworkPro! =O`
+              });
+            }
+
+  auto-label-issues:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - name: Auto-label issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body.toLowerCase();
+            const labels = [];
+            
+            // Auto-label based on title/body content
+            if (title.includes('[bug]') || body.includes('bug') || body.includes('error')) {
+              labels.push('bug');
+            }
+            
+            if (title.includes('[feature]') || body.includes('feature request') || body.includes('enhancement')) {
+              labels.push('enhancement');
+            }
+            
+            if (body.includes('documentation') || title.includes('docs')) {
+              labels.push('documentation');
+            }
+            
+            if (body.includes('security') || title.includes('security')) {
+              labels.push('security');
+            }
+            
+            if (body.includes('performance') || title.includes('performance')) {
+              labels.push('performance');
+            }
+            
+            if (body.includes('networking') || body.includes('http') || body.includes('websocket')) {
+              labels.push('networking');
+            }
+            
+            if (body.includes('enterprise') || body.includes('ai') || body.includes('analytics')) {
+              labels.push('enterprise');
+            }
+            
+            if (body.includes('help') || body.includes('question')) {
+              labels.push('question');
+            }
+            
+            // Add difficulty labels for potential first-time contributors
+            if (body.includes('typo') || body.includes('documentation fix')) {
+              labels.push('good first issue');
+            }
+            
+            if (labels.length > 0) {
+              github.rest.issues.addLabels({
+                issue_number: issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels
+              });
+            }
+
+  stale-issues:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Mark stale issues
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: |
+            =K This issue has been automatically marked as stale because it has been inactive for 60 days.
+            
+            =Å **What happens next?**
+            - This issue will be closed in 7 days if no activity occurs
+            - Comment to keep this issue active
+            - The maintainers may still review and address this issue
+            
+            = **To prevent this in the future:**
+            - Provide additional context or updates
+            - Engage with maintainer questions
+            - Submit a pull request if you're working on this
+            
+            Thank you for your contribution to SwiftNetworkPro! =O
+          stale-pr-message: |
+            =K This PR has been automatically marked as stale because it has been inactive for 30 days.
+            
+            =Å **What happens next?**
+            - This PR will be closed in 7 days if no activity occurs
+            - Push new commits or comment to keep this PR active
+            - Maintainers may still review and merge if appropriate
+            
+            = **To get this PR merged:**
+            - Rebase on the latest main branch
+            - Address any review feedback
+            - Ensure all CI checks pass
+            - Request re-review from maintainers
+            
+            Thank you for your contribution! =O
+          days-before-stale: 60
+          days-before-close: 7
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          exempt-issue-labels: 'security,critical,pinned'
+          exempt-pr-labels: 'security,critical,pinned'
+
+  community-health:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Community health check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Generate monthly community report
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              since: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+            });
+            
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              sort: 'updated',
+              direction: 'desc'
+            });
+            
+            const openIssues = issues.filter(issue => issue.state === 'open' && !issue.pull_request);
+            const closedIssues = issues.filter(issue => issue.state === 'closed' && !issue.pull_request);
+            const openPRs = prs.filter(pr => pr.state === 'open');
+            const mergedPRs = prs.filter(pr => pr.merged_at);
+            
+            console.log(`=Ê Monthly Community Report:
+            - <• New issues: ${issues.filter(i => !i.pull_request).length}
+            -  Closed issues: ${closedIssues.length}
+            - = Open issues: ${openIssues.length}
+            - =€ New PRs: ${prs.length}
+            - ( Merged PRs: ${mergedPRs.length}
+            - =@ Open PRs: ${openPRs.length}`);
+
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - name: Auto-assign reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            
+            // Don't auto-assign if PR is from maintainer
+            if (pr.author_association === 'OWNER' || pr.author_association === 'MEMBER') {
+              return;
+            }
+            
+            // Auto-assign based on files changed
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+            
+            const reviewers = [];
+            const hasSourceChanges = files.some(file => file.filename.startsWith('Sources/'));
+            const hasTestChanges = files.some(file => file.filename.startsWith('Tests/'));
+            const hasDocsChanges = files.some(file => file.filename.endsWith('.md'));
+            const hasEnterpriseChanges = files.some(file => file.filename.includes('Enterprise'));
+            
+            if (hasSourceChanges || hasTestChanges) {
+              reviewers.push('muhittincamdali');
+            }
+            
+            if (reviewers.length > 0) {
+              github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                reviewers: reviewers
+              });
+            }
+            
+            // Auto-assign labels based on changes
+            const labels = [];
+            if (hasSourceChanges) labels.push('code-change');
+            if (hasTestChanges) labels.push('tests');
+            if (hasDocsChanges) labels.push('documentation');
+            if (hasEnterpriseChanges) labels.push('enterprise');
+            
+            if (labels.length > 0) {
+              github.rest.issues.addLabels({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels
+              });
+            }

@@ -1,0 +1,134 @@
+name: ❓ Question
+description: Ask a question about SwiftNetworkPro usage or best practices
+title: "[QUESTION] "
+labels: ["question", "needs-triage"]
+assignees: 
+  - muhittincamdali
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about SwiftNetworkPro? We're here to help! Please check our documentation first, but don't hesitate to ask if you need clarification.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What would you like to know about SwiftNetworkPro?
+      placeholder: Please be as specific as possible
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What area does your question relate to?
+      options:
+        - "Getting Started"
+        - "Core Networking APIs"
+        - "WebSocket Usage"
+        - "GraphQL Integration"
+        - "Authentication & Security"
+        - "Performance Optimization"
+        - "AI Features"
+        - "Enterprise Features"
+        - "Testing & Debugging"
+        - "Best Practices"
+        - "Migration from other libraries"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide context about what you're trying to achieve
+      placeholder: |
+        I'm building an app that...
+        I need to...
+        I'm having trouble with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted-solutions
+    attributes:
+      label: What have you tried?
+      description: Have you tried any solutions or found any relevant documentation?
+      placeholder: |
+        - Checked the README
+        - Looked at examples
+        - Tried X approach but...
+    validations:
+      required: false
+
+  - type: textarea
+    id: code-sample
+    attributes:
+      label: Code sample (if applicable)
+      description: If relevant, please provide a code sample showing what you're trying to do
+      render: swift
+      placeholder: |
+        import SwiftNetworkPro
+        
+        // Your code here
+    validations:
+      required: false
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: SwiftNetworkPro Version
+      description: What version of SwiftNetworkPro are you using?
+      options:
+        - "3.0.0 (latest)"
+        - "2.9.x"
+        - "2.8.x"
+        - "2.7.x"
+        - "Other (please specify in additional context)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: What platform are you developing for?
+      multiple: true
+      options:
+        - iOS
+        - macOS
+        - watchOS
+        - tvOS
+        - visionOS
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about your question here
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission checklist
+      description: Please confirm you've done the following
+      options:
+        - label: I've searched existing issues and discussions
+        - label: I've checked the documentation
+        - label: I've provided sufficient context and details
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

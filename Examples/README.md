@@ -1,85 +1,118 @@
 # SwiftNetworkPro Examples
 
-This directory contains comprehensive examples demonstrating SwiftNetworkPro's capabilities across three progressive levels.
+This directory contains comprehensive examples demonstrating how to use SwiftNetworkPro in various scenarios.
 
-## 📚 Example Structure
+## 📁 Examples Overview
 
-### 🟢 Level 1: Basic Examples
-**Perfect for beginners getting started with SwiftNetworkPro**
-- Simple HTTP requests (GET, POST, PUT, DELETE)
-- Basic configuration and setup
-- Error handling fundamentals
-- Response parsing with Codable
+### [BasicExample](./BasicExample/)
+**Perfect for getting started with SwiftNetworkPro**
 
-### 🟡 Level 2: Intermediate Examples  
-**For developers building real-world applications**
-- Authentication patterns (OAuth2, JWT)
-- Request interceptors and response processors
-- Caching strategies and offline support
-- WebSocket real-time communication
-- GraphQL queries and mutations
+- ✅ Simple GET/POST requests
+- ✅ Type-safe JSON decoding
+- ✅ Error handling patterns
+- ✅ Authentication setup
+- ✅ File upload/download
+- ✅ SwiftUI integration
 
-### 🔴 Level 3: Advanced Examples
-**Enterprise-grade implementations and complex patterns**
-- Multi-environment configurations
-- Custom security implementations
-- Performance optimization techniques
-- Large-scale application architectures
-- Production deployment strategies
+**Key Features Demonstrated:**
+- Modern async/await networking
+- Enterprise configuration
+- Request interceptors
+- Performance monitoring
+- AI-powered optimization
 
-## 🚀 Quick Navigation
-
-| Level | Directory | Description | Complexity |
-|-------|-----------|-------------|------------|
-| **Basic** | [Basic/](Basic/) | Core functionality, simple patterns | ⭐ |
-| **Intermediate** | [Intermediate/](Intermediate/) | Real-world applications | ⭐⭐⭐ |
-| **Advanced** | [Advanced/](Advanced/) | Enterprise architectures | ⭐⭐⭐⭐⭐ |
-
-## 📱 Platform Examples
-
-Each level includes platform-specific examples:
-- 📱 **iOS**: UIKit and SwiftUI implementations
-- 💻 **macOS**: AppKit and SwiftUI desktop applications  
-- ⌚ **watchOS**: WatchKit optimized networking
-- 📺 **tvOS**: Focus-based navigation integration
-- 🥽 **visionOS**: Spatial computing networking patterns
-
-## 🛠️ Running Examples
+## 🚀 Quick Start
 
 ### Prerequisites
-- Xcode 15.0+
-- iOS 15.0+ / macOS 13.0+ / watchOS 9.0+ / tvOS 15.0+ / visionOS 1.0+
-- Swift 5.9+
 
-### Setup
-```bash
-# Clone the repository
-git clone https://github.com/muhittincamdali/SwiftNetworkPro.git
-cd SwiftNetworkPro/Examples
+- **Xcode 15.0+** with Swift 5.9+
+- **iOS 15.0+** / macOS 13.0+ / watchOS 9.0+ / tvOS 15.0+ / visionOS 1.0+
+- **SwiftNetworkPro 3.0+**
 
-# Open in Xcode
-open BasicExample.xcodeproj
+### Installation
 
-# Or build with Swift Package Manager
-swift build
-swift run BasicExample
+1. **Add SwiftNetworkPro to your project**:
+   ```swift
+   dependencies: [
+       .package(url: "https://github.com/muhittincamdali/SwiftNetworkPro", from: "3.0.0")
+   ]
+   ```
+
+2. **Import and configure**:
+   ```swift
+   import SwiftNetworkPro
+   
+   let client = NetworkClient(configuration: .enterprise)
+   ```
+
+3. **Start making requests**:
+   ```swift
+   let users = try await client.get("/users", as: [User].self)
+   ```
+
+## 📖 Example Walkthrough
+
+### Basic Networking
+
+```swift
+import SwiftNetworkPro
+
+// 1. Configure the client
+let config = NetworkConfiguration(
+    baseURL: "https://api.example.com",
+    timeout: 30,
+    retryPolicy: .exponentialBackoff(maxAttempts: 3),
+    security: .enterprise
+)
+
+let client = NetworkClient(configuration: config)
+
+// 2. Make requests
+let users = try await client.get("/users", as: [User].self)
+let newUser = try await client.post("/users", body: createRequest, as: User.self)
 ```
 
-## 🎯 Learning Path
+### Advanced Features
 
-We recommend following this progression:
+```swift
+// AI-powered optimization
+let optimizedClient = NetworkClient.shared
+await optimizedClient.networkIntelligence.setOptimizationLevel(.adaptive)
 
-1. **Start with Basic** → Master fundamentals
-2. **Progress to Intermediate** → Build real applications
-3. **Advance to Expert** → Implement enterprise solutions
+// Real-time monitoring
+let healthStatus = await optimizedClient.getHealthStatus()
+print("System health: \(healthStatus.isHealthy)")
+```
 
-Each example includes:
-- ✅ **Complete source code** with detailed comments
-- ✅ **Step-by-step tutorials** in README files
-- ✅ **Best practices** and architectural guidance
-- ✅ **Common pitfalls** and how to avoid them
-- ✅ **Performance tips** for optimal implementation
+## 🔧 Configuration Examples
+
+### Development Configuration
+```swift
+let devConfig = NetworkConfiguration(
+    baseURL: "https://api-dev.example.com",
+    timeout: 60, // Longer timeout for debugging
+    retryPolicy: .none, // No retries for debugging
+    cachePolicy: .reloadIgnoringLocalCacheData,
+    security: .standard
+)
+```
+
+### Production Configuration
+```swift
+let prodConfig = NetworkConfiguration(
+    baseURL: "https://api.example.com",
+    timeout: 30,
+    retryPolicy: .exponentialBackoff(maxAttempts: 3),
+    cachePolicy: .returnCacheDataElseLoad,
+    security: .enterprise
+)
+```
+
+## 📚 Additional Resources
+
+- [SwiftNetworkPro Documentation](../README.md)
+- [Contributing](../CONTRIBUTING.md)
 
 ---
 
-**Ready to start your SwiftNetworkPro journey? Begin with [Basic Examples](Basic/)! 🚀**
+**Ready to build amazing networking features? Start with the [BasicExample](./BasicExample/) and work your way up! 🚀**

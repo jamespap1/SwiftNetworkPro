@@ -1,0 +1,91 @@
+# SwiftFormat Configuration for SwiftNetworkPro
+
+# Format options
+--indent 4
+--tabwidth 4
+--maxwidth 120
+--linebreaks lf
+--semicolons never
+--trimwhitespace always
+--insertlines true
+--removelines true
+--allman false
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+--wraptypealiases before-first
+--wrapreturntype if-multiline
+--wrapconditions after
+--stripunusedargs closure-only
+--self init-only
+--importgrouping testable-bottom
+--testableimports false
+--markextensions never
+--extensionlength 0
+--patternlet hoist
+--redundanttype inferred
+--modifierorder
+--shortoptionals except-properties
+--ranges spaced
+--elseposition same-line
+--guardelse auto
+--nospaceoperators
+--operatorfunc spaced
+--nevertrailing closure,array,dictionary
+--ifdef no-indent
+--xcodeindentation disabled
+--exclude Pods,build,.build,DerivedData
+
+# Rules
+--rules \
+redundantParens,\
+redundantReturn,\
+redundantSelf,\
+redundantType,\
+redundantPattern,\
+redundantGet,\
+redundantFileprivate,\
+redundantRawValues,\
+redundantVoidReturnType,\
+redundantNilInit,\
+redundantLet,\
+redundantExtensionACL,\
+redundantObjc,\
+redundantInit,\
+redundantBreak,\
+redundantClosure,\
+unneededParentheses,\
+unusedArguments,\
+leadingDelimiters,\
+trailingCommas,\
+duplicateImports,\
+sortImports,\
+wrapMultilineStatementBraces,\
+braces,\
+spaceAroundParens,\
+spaceInsideParens,\
+spaceAroundBrackets,\
+spaceInsideBrackets,\
+spaceAroundBraces,\
+spaceInsideBraces,\
+spaceAroundGenerics,\
+spaceInsideGenerics,\
+spaceAroundOperators,\
+spaceAroundComments,\
+consecutiveSpaces,\
+consecutiveBlankLines,\
+blankLinesAtEndOfScope,\
+blankLinesAtStartOfScope,\
+blankLinesBetweenScopes,\
+linebreaks,\
+elseOnSameLine,\
+isEmpty,\
+andOperator,\
+anyObjectProtocol,\
+typeSugar,\
+preferKeyPath,\
+organizeDeclarations,\
+extensionAccessControl,\
+markTypes,\
+todos

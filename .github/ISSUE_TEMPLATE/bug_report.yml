@@ -1,0 +1,143 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior in SwiftNetworkPro
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: 
+  - muhittincamdali
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us diagnose and fix the issue.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of the bug
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear description of what you expected to happen
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Import SwiftNetworkPro
+        2. Create a NetworkClient
+        3. Call method X
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-sample
+    attributes:
+      label: Code sample
+      description: Please provide a minimal code example that reproduces the issue
+      render: swift
+      placeholder: |
+        import SwiftNetworkPro
+        
+        let client = NetworkClient.shared
+        // Your code here
+    validations:
+      required: false
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: SwiftNetworkPro Version
+      description: What version of SwiftNetworkPro are you running?
+      options:
+        - "3.0.0 (latest)"
+        - "2.9.x"
+        - "2.8.x"
+        - "2.7.x"
+        - "Other (please specify in additional context)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: What platform are you seeing the problem on?
+      multiple: true
+      options:
+        - iOS
+        - macOS
+        - watchOS
+        - tvOS
+        - visionOS
+    validations:
+      required: true
+
+  - type: input
+    id: ios-version
+    attributes:
+      label: iOS/Platform Version
+      description: What version of iOS/platform are you running?
+      placeholder: "e.g., iOS 18.0, macOS 14.0"
+    validations:
+      required: true
+
+  - type: input
+    id: xcode-version
+    attributes:
+      label: Xcode Version
+      description: What version of Xcode are you using?
+      placeholder: "e.g., Xcode 15.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: swift-version
+    attributes:
+      label: Swift Version
+      description: What version of Swift are you using?
+      options:
+        - "Swift 5.9"
+        - "Swift 5.8"
+        - "Swift 5.7"
+        - "Other (please specify)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output or error messages
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might be helpful
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
